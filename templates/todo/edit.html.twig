@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Todo{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Edit Todo</h1>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Update</button>
+    {{ form_end(form) }}
+    <p><a href="{{ path('todo_index') }}">Back</a></p>
+
+    <h2>Comments</h2>
+    <ul>
+        {% for c in todo.comments %}
+            <li>
+                {{ c.content }} <small>{{ c.createdAt|date('Y-m-d H:i') }}</small>
+                <form method="post" action="{{ path('comment_delete', {id: c.id}) }}" style="display:inline" onsubmit="return confirm('Delete comment?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_comment_' ~ c.id) }}">
+                    <button type="submit">delete</button>
+                </form>
+            </li>
+        {% else %}
+            <li>No comments</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Add Comment</h3>
+    <form method="post" action="{{ path('comment_new', {id: todo.id}) }}">
+        <textarea name="comment[content]" required></textarea>
+        <button type="submit">Add</button>
+    </form>
+</div>
+{% endblock %}
+
+

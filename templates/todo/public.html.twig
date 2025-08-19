@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Todos (Public){% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Todos (Public)</h1>
+        <ul>
+            {% for todo in todos %}
+                <li>
+                    <strong>{{ todo.title }}</strong>
+                    {% if todo.isCompleted %}<span>(done)</span>{% endif %}
+                    <div>{{ todo.description }}</div>
+                    {% if todo.categories|length > 0 %}
+                        <small>Categories: {{ todo.categories|map(c => c.name)|join(', ') }}</small>
+                    {% endif %}
+                    {% if todo.comments|length > 0 %}
+                        <details>
+                            <summary>Comments ({{ todo.comments|length }})</summary>
+                            <ul>
+                                {% for c in todo.comments %}
+                                    <li>{{ c.content }} <small>at {{ c.createdAt|date('Y-m-d H:i') }}</small></li>
+                                {% endfor %}
+                            </ul>
+                        </details>
+                    {% endif %}
+                </li>
+            {% else %}
+                <li>No todos yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+
+

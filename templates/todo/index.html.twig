@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Todos{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Todos</h1>
+    <p><a href="{{ path('todo_new') }}">Create new</a> | <a href="{{ path('todos_public') }}">Public view</a></p>
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash-{{ label }}">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Completed</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for todo in todos %}
+            <tr>
+                <td>{{ todo.id }}</td>
+                <td>{{ todo.title }}</td>
+                <td>{{ todo.isCompleted ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('todo_edit', {id: todo.id}) }}">edit</a>
+                    <form method="post" action="{{ path('todo_delete', {id: todo.id}) }}" style="display:inline" onsubmit="return confirm('Delete?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_todo_' ~ todo.id) }}">
+                        <button type="submit">delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">No todos</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+
